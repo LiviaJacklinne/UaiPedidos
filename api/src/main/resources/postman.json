@@ -1,0 +1,14 @@
+{
+  "itens": [
+    {
+      "nomeProduto": "Café",
+      "quantidade": 2,
+      "precoUnitario": 10.50
+    },
+    {
+      "nomeProduto": "Pão de Queijo",
+      "quantidade": 5,
+      "precoUnitario": 3.00
+    }
+  ]
+}
