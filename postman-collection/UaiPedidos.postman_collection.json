@@ -1,0 +1,191 @@
+{
+  "info": {
+    "_postman_id": "87dcab99-a7f7-40db-97fe-2189a5df02c9",
+    "name": "UaiPedidos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31103071"
+  },
+  "item": [
+    {
+      "name": "Criar Pedido",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"itens\": [\r\n    {\r\n      \"nomeProduto\": \"Café\",\r\n      \"quantidade\": 2,\r\n      \"precoUnitario\": 10.50\r\n    },\r\n    {\r\n      \"nomeProduto\": \"Pão de Queijo\",\r\n      \"quantidade\": 5,\r\n      \"precoUnitario\": 3.00\r\n    }\r\n  ]\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/pedidos",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "pedidos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Buscar Pedido Por Id",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/pedidos/?id=a112fb3e-3e22-4c13-bbd7-14b740c2768d",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "pedidos",
+            ""
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "a112fb3e-3e22-4c13-bbd7-14b740c2768d"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listar Todos Os Pedidos",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/pedidos",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "pedidos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Aprovar Pedido",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/pedidos/?id=a112fb3e-3e22-4c13-bbd7-14b740c2768d/aprovar",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "",
+            "pedidos",
+            ""
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "a112fb3e-3e22-4c13-bbd7-14b740c2768d/aprovar"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cancelar Pedido",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/pedidos/?id=a112fb3e-3e22-4c13-bbd7-14b740c2768d/cancelar",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "",
+            "pedidos",
+            ""
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "a112fb3e-3e22-4c13-bbd7-14b740c2768d/cancelar"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Deletar Pedido",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/pedidos/?id=a112fb3e-3e22-4c13-bbd7-14b740c2768d",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "",
+            "pedidos",
+            ""
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "a112fb3e-3e22-4c13-bbd7-14b740c2768d"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": ""
+    }
+  ]
+}
