@@ -18,7 +18,7 @@ public class CancelarPedidoUseCase {
         var pedido = pedidoRepository.buscarPorId(id)
                 .orElseThrow(() -> new PedidoNaoEncontradoException(id.toString()));
 
-        pedido.cancelar(); // 🔥 regra no domínio
+        pedido.cancelar();
 
         pedidoRepository.salvar(pedido);
     }

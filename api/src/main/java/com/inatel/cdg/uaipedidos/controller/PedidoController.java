@@ -61,8 +61,8 @@ public class PedidoController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}/confirmar")
-    public ResponseEntity<Void> confirmar(@PathVariable UUID id) {
+    @PatchMapping("/{id}/aprovar")
+    public ResponseEntity<Void> aprovar(@PathVariable UUID id) {
 
         aprovarPedidoUseCase.executar(id);
 
