@@ -1,0 +1,125 @@
+<div class="container">
+
+  <h1>UaiPedidos - Gestão de Pedidos</h1>
+
+  <!-- AÇÕES -->
+  <div class="actions">
+
+    <!-- Buscar por ID -->
+    <div class="search">
+      <input
+        type="text"
+        placeholder="Buscar pedido por ID"
+        [(ngModel)]="searchId"
+      />
+      <button (click)="buscarPorId()">Buscar</button>
+      <button class="secondary" (click)="listarTodos()">Limpar</button>
+    </div>
+
+    <!-- Criar -->
+    <button class="primary" (click)="abrirFormulario()">
+      Novo Pedido
+    </button>
+
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div *ngIf="mostrarFormulario" class="form-card">
+
+    <h2>{{ editando ? 'Editar Pedido' : 'Novo Pedido' }}</h2>
+
+    <form (ngSubmit)="salvar()">
+
+      <div class="form-group">
+        <label>Descrição</label>
+        <input
+          type="text"
+          [(ngModel)]="pedidoForm.descricao"
+          name="descricao"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Valor</label>
+        <input
+          type="number"
+          [(ngModel)]="pedidoForm.valor"
+          name="valor"
+          required
+        />
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" class="primary">
+          Salvar
+        </button>
+        <button type="button" class="secondary" (click)="cancelarFormulario()">
+          Cancelar
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+  <!-- TABELA -->
+  <table class="table">
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let pedido of pedidos">
+
+        <td>{{ pedido.id }}</td>
+        <td>{{ pedido.descricao }}</td>
+        <td>R$ {{ pedido.valor }}</td>
+        <td>
+          <span [ngClass]="pedido.status">
+            {{ pedido.status }}
+          </span>
+        </td>
+
+        <td class="actions-buttons">
+
+          <button (click)="editar(pedido)">Editar</button>
+
+          <button
+            class="approve"
+            (click)="aprovar(pedido.id)"
+            [disabled]="pedido.status === 'APROVADO'"
+          >
+            Aprovar
+          </button>
+
+          <button
+            class="cancel"
+            (click)="cancelar(pedido.id)"
+            [disabled]="pedido.status === 'CANCELADO'"
+          >
+            Cancelar
+          </button>
+
+          <button
+            class="delete"
+            (click)="deletar(pedido.id)"
+          >
+            Deletar
+          </button>
+
+        </td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>
