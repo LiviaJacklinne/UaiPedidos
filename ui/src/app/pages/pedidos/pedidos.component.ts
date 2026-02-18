@@ -3,12 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PedidosService } from '../../services/pedidos.service';
 import { NovoPedido, Pedido } from '../../modules/pedido/pedido.module';
+import { NotificacaoService } from '../../services/notificacao.service';
+
 
 @Component({
   selector: 'app-pedidos',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     FormsModule
   ],
   templateUrl: './pedidos.component.html',
@@ -20,26 +22,29 @@ export class PedidosComponent implements OnInit {
   pedidos: Pedido[] = [];
 
   searchId?: string;
-
   mostrarFormulario = false;
-  editando = false;
 
-  pedidoForm: Partial<Pedido> = {
-    descricao: '',
-    valor: 0
-  };
+  itensDisponiveis = [
+    { nome: 'Café', preco: 5, quantidade: 0 },
+    { nome: 'Pão de Queijo', preco: 7.5, quantidade: 0 },
+    { nome: 'Pizza', preco: 40, quantidade: 0 },
+    { nome: 'Hambúrguer', preco: 25, quantidade: 0 },
+    { nome: 'Refrigerante', preco: 8, quantidade: 0 },
+    { nome: 'Batata Frita', preco: 15, quantidade: 0 },
+  ];
 
 
+  constructor(
+    private pedidosService: PedidosService,
+    private notificacao: NotificacaoService
+  ) { }
 
-  constructor(private pedidosService: PedidosService) {}
 
   ngOnInit(): void {
     this.listarTodos();
   }
 
-  // =============================
   // LISTAR TODOS
-  // =============================
   listarTodos(): void {
     this.pedidosService.getAll().subscribe({
       next: (data) => {
@@ -51,9 +56,7 @@ export class PedidosComponent implements OnInit {
     });
   }
 
-  // =============================
   // BUSCAR POR ID
-  // =============================
   buscarPorId(): void {
     if (!this.searchId) return;
 
@@ -68,99 +71,110 @@ export class PedidosComponent implements OnInit {
     });
   }
 
-  // =============================
-  // ABRIR FORMULÁRIO
-  // =============================
-  abrirFormulario(): void {
-    this.mostrarFormulario = true;
-    this.editando = false;
-    this.pedidoForm = {
-      descricao: '',
-      valor: 0
-    };
+  limpar() {
+    this.searchId = '';
+    this.listarTodos();
   }
 
-  cancelarFormulario(): void {
+  // FORMULÁRIO
+  abrirFormulario() {
+    this.resetarItens();
+    this.mostrarFormulario = true;
+  }
+
+  cancelarFormulario() {
+    this.resetarItens();
     this.mostrarFormulario = false;
   }
 
-  // =============================
-  // SALVAR (CREATE ou UPDATE)
-  // =============================
-  salvar(): void {
+  resetarItens() {
+    this.itensDisponiveis.forEach(item => item.quantidade = 0);
+  }
 
-  if (this.editando && this.pedidoForm.id) {
+  aumentarQuantidade(item: any) {
+    item.quantidade++;
+  }
 
-    const pedidoAtualizado = {
-      descricao: this.pedidoForm.descricao!,
-      valor: this.pedidoForm.valor!
-    };
+  diminuirQuantidade(item: any) {
+    if (item.quantidade > 0) {
+      item.quantidade--;
+    }
+  }
 
-    this.pedidosService.update(this.pedidoForm.id, pedidoAtualizado)
-      .subscribe({
-        next: () => {
-          this.listarTodos();
-          this.mostrarFormulario = false;
-        },
-        error: (err) => console.error('Erro ao atualizar', err)
-      });
+  calcularTotal(): number {
+    return this.itensDisponiveis
+      .reduce((total, item) => total + (item.preco * item.quantidade), 0);
+  }
 
-  } else {
+  // SALVAR
+  salvarPedido() {
+    const itensSelecionados = this.itensDisponiveis
+      .filter(item => item.quantidade > 0)
+      .map(item => ({
+        nomeProduto: item.nome,
+        quantidade: item.quantidade,
+        precoUnitario: item.preco
+      }));
 
-    const novoPedido = {
-      descricao: this.pedidoForm.descricao!,
-      valor: this.pedidoForm.valor!
+    if (itensSelecionados.length === 0) return;
+
+    const novoPedido: NovoPedido = {
+      itens: itensSelecionados
     };
 
     this.pedidosService.create(novoPedido)
       .subscribe({
         next: () => {
+          this.notificacao.sucesso('Pedido criado com sucesso!');
           this.listarTodos();
           this.mostrarFormulario = false;
         },
-        error: (err) => console.error('Erro ao criar', err)
+        error: () => {
+          this.notificacao.erro('Erro ao criar pedido');
+        }
+      });
+
+  }
+
+  // APROVAR
+  aprovar(id: string) {
+    this.pedidosService.aprovar(id)
+      .subscribe({
+        next: () => {
+          this.notificacao.sucesso('Pedido aprovado!');
+          this.listarTodos();
+        },
+        error: () => {
+          this.notificacao.erro('Erro ao aprovar pedido');
+        }
       });
   }
-}
 
-
-  // =============================
-  // EDITAR
-  // =============================
-  editar(pedido: Pedido): void {
-    this.editando = true;
-    this.mostrarFormulario = true;
-    this.pedidoForm = { ...pedido };
-  }
-
-  // =============================
-  // APROVAR
-  // =============================
-  aprovar(id: string): void {
-    this.pedidosService.aprovar(id).subscribe({
-      next: () => this.listarTodos(),
-      error: (err) => console.error('Erro ao aprovar', err)
-    });
-  }
-
-  // =============================
   // CANCELAR
-  // =============================
-  cancelar(id: string): void {
-    this.pedidosService.cancelar(id).subscribe({
-      next: () => this.listarTodos(),
-      error: (err) => console.error('Erro ao cancelar', err)
-    });
+  cancelar(id: string) {
+    this.pedidosService.cancelar(id)
+      .subscribe({
+        next: () => {
+          this.notificacao.aviso('Pedido cancelado!');
+          this.listarTodos();
+        },
+        error: () => {
+          this.notificacao.erro('Erro ao cancelar pedido');
+        }
+      });
   }
 
-  // =============================
   // DELETAR
-  // =============================
-  deletar(id: string): void {
-    this.pedidosService.delete(id).subscribe({
-      next: () => this.listarTodos(),
-      error: (err) => console.error('Erro ao deletar', err)
-    });
+  deletar(id: string) {
+    this.pedidosService.delete(id)
+      .subscribe({
+        next: () => {
+          this.notificacao.info('Pedido deletado!');
+          this.listarTodos();
+        },
+        error: () => {
+          this.notificacao.erro('Erro ao deletar pedido');
+        }
+      });
   }
-
 }
