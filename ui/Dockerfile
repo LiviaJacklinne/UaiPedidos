@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN npx ng build --configuration production
 
 
 # ---------- STAGE 2: Nginx ----------
