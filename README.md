@@ -1,66 +1,65 @@
-# Dockerfile
-```bash
-# Backend api/
-docker build -t uaipedidos-api .
+# UaiPedidos
 
-# Sempre que altera backend
-docker compose up --build
+Sistema fullstack de gerenciamento de pedidos com deploy containerizado em Kubernetes.
 
-# Frontend ui/
-docker build -t uaipedidos-ui .
-docker run -p 4200:80 uaipedidos-ui
+> ### Video Explicativo
+> https://youtu.be/p0f_RxCD5tk
 
-# Rebuildar frontend
-docker build -t liviajacklinne/uaipedidos-ui:2.2 .
-docker push liviajacklinne/uaipedidos-ui:2.2
+## Descrição
+O UaiPedidos é uma aplicação fullstack para gerenciamento de pedidos,
+desenvolvida com foco em boas práticas de arquitetura (DDD e Clean Architecture),
+containerização com Docker e orquestração com Kubernetes.
 
-docker build -t liviajacklinne/uaipedidos-api:1.2 .
-docker push liviajacklinne/uaipedidos-api:1.2
-```
-
-Subir docker-compose
-```bash
-docker compose up --build
-```
+O projeto cobre todo o fluxo, desde o desenvolvimento do backend e frontend
+até o deploy em ambiente containerizado.
 
 
-# Kubernetes
+## 🚀 Funcionalidades
 
-```yml
-# Você pode definir o namespace padrão do seu contexto:
-kubectl config set-context --current --namespace=uaipedidos
-```
+- Criar pedido com múltiplos itens
+- Cálculo automático do valor total
+- Aprovar pedido
+- Cancelar pedido
+- Excluir pedido concluído
+- Listar todos os pedidos
+- Consultar pedido por ID
 
-```bash
-# criando cluster
-kubectl create namespace uaipedidos
+## 🛠 Tecnologias
 
-kubectl apply -f infra/k8s/backend-deployment.yaml
+### Backend
+- Java 21
+- Spring Boot 4
+- JPA / Hibernate
+- PostgreSQL 16
 
+### Frontend
+- Angular 17
+- TypeScript
 
-kubectl apply -f infra/k8s/postgres-deployment.yaml
-kubectl apply -f infra/k8s/postgres-service.yaml
+### Arquitetura
+- DDD
+- Clean Architecture
 
+### DevOps
+- Docker
+- Kubernetes
 
-kubectl apply -f infra/k8s/frontend-deployment.yaml
-kubectl apply -f infra/k8s/frontend-service.yaml
+## 🏗 Arquitetura
 
+Frontend (Angular)  
+↓  
+Nginx  
+↓  
+Backend (Spring Boot)  
+↓  
+PostgreSQL  
 
+## ▶️ Como executar o projeto
 
-```
+### Docker + Kubernetes
 
-# cURL backend
-```
-curl -X POST http://localhost:8080/pedidos \
-     -H "Content-Type: application/json" \
-     -d '{
-           "itens": [
-             {
-               "nomeProduto": "Café",
-               "quantidade": 3,
-               "precoUnitario": 5
-             }
-           ]
-         }'
-
-```
+1. Build das imagens
+2. Aplicar os manifests:
+   kubectl apply -f k8s/
+3. Acessar:
+   http://localhost:30090
