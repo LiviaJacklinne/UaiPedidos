@@ -2,7 +2,7 @@
 
 Sistema fullstack de gerenciamento de pedidos com deploy containerizado em Kubernetes.
 
-> ### Video Explicativo
+> ### <img width="16" height="16" alt="image" src="https://github.com/user-attachments/assets/6d7e5ea7-06c5-4119-a33a-bc96f6472792" /> Video Explicativo 
 > https://youtu.be/p0f_RxCD5tk
 
 ## Descrição
@@ -12,7 +12,6 @@ containerização com Docker e orquestração com Kubernetes.
 
 O projeto cobre todo o fluxo, desde o desenvolvimento do backend e frontend
 até o deploy em ambiente containerizado.
-
 
 ## 🚀 Funcionalidades
 
